@@ -1,7 +1,7 @@
 ; --------------------------------------------------------------
 ; Created by: Michael Clermont
 ; Created on: Jan 2023
-; Does the fibonacci sequence up to 8
+; Writes out 7 fibonacci numbers
 ; Runs on 64-bit x86 Linux only.
 ; --------------------------------------------------------------
 
@@ -11,8 +11,6 @@ section .bss
 
 
 section .data
-
-
     ; constants here
     newLine: db 10                       ; UNICODE 10 is new line character
     done: db 10, "Done.", 10             ; string to print
@@ -23,18 +21,28 @@ section .text
     global _start                        ; entry point for linker
 
 
-    _start:                              ; start here
-        mov r8, -1                       ; move the integer 0 into r8
-        mov r9, 9 -1                     ; move the integer 9 into r9
+    _start:                             ; start here
+        mov r8, 0                       ; move the integer 0 into r8 - fib number 1
+        mov r9, 1                       ; move the integer 1 into r9  - fib number 2
+        mov r12, 0                      ; initialize counter register
+
+        push r8                      ; print first fib num
+        call PrintSingleDigitInt     ; call our print single digit function
+        add rsp, 4                   ; pop but throw away the value
+        
 
 
         IncrementLabel:
             ; doing a do ... while loop!
-            inc r8
-            push r8
+            mov r10, r8                  ; initialize temp num
+            add r10, r9                  ; generate fib result
+            push r9                      ; print result
             call PrintSingleDigitInt     ; call our print single digit function
             add rsp, 4                   ; pop but throw away the value
-            cmp r8, 9-1                  ; compare r8 and ascii 9
+            mov r8, r9                   ; move fib num 2 into r8
+            mov r9, r10                  ; move result into r9
+            inc r12                      ; increment counter
+            cmp r12, 5                   ; compare r8 and ascii 5
             jle IncrementLabel           ; jump if <= goto "LoopLable"
 
 
@@ -57,7 +65,7 @@ PrintSingleDigitInt:
 
 
     ; when a function is called, the return value is placed on the stack
-    ; we need to keep this, so that we can return to the corret place in our program!
+    ; we need to keep this, so that we can return to the correct place in our program!
     pop r14                     ; pop the return address to r9
     pop r15                     ; pop the "parameter" we placed on the stack
     add r15, 48                 ; add the ascii offset
