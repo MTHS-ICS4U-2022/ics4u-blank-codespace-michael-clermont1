@@ -11,8 +11,6 @@ section .bss
 
 
 section .data
-
-
     ; constants here
     newLine: db 10                       ; UNICODE 10 is new line character
     done: db 10, "Done.", 10             ; string to print
